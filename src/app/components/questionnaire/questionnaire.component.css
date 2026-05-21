@@ -88,6 +88,16 @@
   font-size: 0.85rem;
 }
 
+.validation-summary {
+  margin-top: 16px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  background: rgba(176, 0, 32, 0.08);
+  border: 1px solid rgba(176, 0, 32, 0.2);
+  color: #8b001a;
+  font-weight: 600;
+}
+
 .actions {
   display: flex;
   justify-content: flex-start;

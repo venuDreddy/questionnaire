@@ -27,6 +27,11 @@
       </mat-card>
     }
 
+    @if (submitted && form.invalid) {
+      <div class="validation-summary">
+        Missed questions: {{ missingQuestionIndexes.join(', ') }}
+      </div>
+    }
     <div class="actions">
       <button mat-raised-button color="primary" type="submit">Submit</button>
     </div>
@@ -41,7 +46,7 @@
         </div>
         <div class="summary-header-right">
           <button (click)="onCopy()" class="copy-btn" [class.success]="copySuccess">
-            {{ copySuccess ? '✓ Copied!' : 'Copy' }}
+            {{ copySuccess ? 'Copied' : 'Copy' }}
           </button>
           <span class="summary-chip">{{ summary.length }} answers</span>
         </div>

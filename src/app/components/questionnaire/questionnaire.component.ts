@@ -236,6 +236,8 @@ export class QuestionnaireComponent {
   readonly form: FormGroup<Record<string, FormControl<string>>>;
   summary: SummaryItem[] = [];
   submitted = false;
+  copySuccess = false;
+  private copyResetHandle?: ReturnType<typeof setTimeout>;
 
   constructor() {
     const controls: Record<string, FormControl<string>> = {};
@@ -270,21 +272,31 @@ export class QuestionnaireComponent {
     });
   }
 
+  get missingQuestionIndexes(): number[] {
+    return this.questions
+      .map((question, index) =>
+        this.form.controls[question.id].invalid ? index + 1 : null,
+      )
+      .filter((value): value is number => value !== null);
+  }
+
   async onCopy(): Promise<void> {
     const copyText = this.summary
       .map(item => `${item.index}.${item.choice}`)
       .join('\n');
-    
+
+    if (this.copyResetHandle) {
+      clearTimeout(this.copyResetHandle);
+    }
+    this.copySuccess = true;
+    this.copyResetHandle = setTimeout(() => {
+      this.copySuccess = false;
+    }, 2000);
+
     try {
       await navigator.clipboard.writeText(copyText);
-      this.copySuccess = true;
-      setTimeout(() => {
-        this.copySuccess = false;
-      }, 2000);
     } catch (err) {
       console.error('Failed to copy:', err);
     }
   }
-
-  copySuccess = false;
 }
