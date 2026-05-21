@@ -1,0 +1,62 @@
+<section class="questionnaire">
+  <header class="questionnaire__header">
+    <h1>Questionnaire</h1>
+    <p>Select one option per question, then submit to see your summary.</p>
+  </header>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    @for (question of questions; track question.id; let index = $index) {
+      <mat-card class="question-card">
+        <mat-card-content>
+          <div class="question-title">
+            <span class="question-index">{{ index + 1 }}</span>
+            <span class="question-text">{{ question.text }}</span>
+          </div>
+          <mat-radio-group class="options" [formControlName]="question.id">
+            @for (option of question.options; track option.label) {
+              <mat-radio-button [value]="option.label">
+                <span class="option-label">{{ option.label }}.</span>
+                {{ option.text }}
+              </mat-radio-button>
+            }
+          </mat-radio-group>
+          @if (submitted && form.controls[question.id].invalid) {
+            <div class="question-error">Please choose an option.</div>
+          }
+        </mat-card-content>
+      </mat-card>
+    }
+
+    <div class="actions">
+      <button mat-raised-button color="primary" type="submit">Submit</button>
+    </div>
+  </form>
+
+  @if (summary.length) {
+    <mat-card class="summary-card">
+      <div class="summary-header">
+        <div>
+          <div class="summary-title">Summary</div>
+          <div class="summary-subtitle">Only the essentials</div>
+        </div>
+        <div class="summary-header-right">
+          <button (click)="onCopy()" class="copy-btn" [class.success]="copySuccess">
+            {{ copySuccess ? '✓ Copied!' : 'Copy' }}
+          </button>
+          <span class="summary-chip">{{ summary.length }} answers</span>
+        </div>
+      </div>
+      <div class="summary-grid">
+        @for (item of summary; track item.index) {
+          <div class="summary-item">
+            <div class="summary-badge">{{ item.index }}</div>
+            <div class="summary-content">
+              <div class="summary-question">{{ item.text }}</div>
+              <div class="summary-answer">{{ item.answer }}</div>
+            </div>
+          </div>
+        }
+      </div>
+    </mat-card>
+  }
+</section>
